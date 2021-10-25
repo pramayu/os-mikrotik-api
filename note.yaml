@@ -1,0 +1,27 @@
+# user
+  # non upgrade
+  # upgrade user
+    # paid_status(def false)
+    # expired_date
+    # expired_status
+    # paid_date
+
+# mikrotik
+  # serial number
+  # router os version
+
+
+  # if data['payment_type'] == "bank_transfer":
+    #   argument["bank_transfer"] = {"bank": data['kode']}
+    # if data['payment_type'] == "echannel":
+    #   argument["payment_type"] = data["payment_type"]
+    # if data['payment_type'] == "permata":
+    #   argument["payment_type"] = data["payment_type"]
+    # if data['payment_type'] == "gopay":
+    #   argument[f"{data['payment_type']}"] = {"enable_callback": False}
+    # if data['payment_type'] == 'cstore':
+    #   argument[f"{data['payment_type']}"] = {"store": data['kode'],"messag": "Terima Kasih"}
+
+
+# basic setting
+# set ip addr interface<bridge> + NAT

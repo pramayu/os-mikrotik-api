@@ -1,0 +1,5 @@
+.env
+note.ymml
+venv/
+__pycache__
+secrectfile/
