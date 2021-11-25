@@ -4,6 +4,7 @@ from api.controller.schema.routerint_schema import RouterInterfaceSchema
 from api.filemodel.db import RouterUser, RouterConf, RouterInterface
 from api.configure.middleware.connectclient import clientrouter
 from api.modulefn.constants.respndfn import def_response
+from api.modulefn.routercmd.liststring import to_string
 from api.modulefn.hashedtxt.AEScipher import AESCipher
 from api.modulefn.routercmd.ip_network import CalcIp
 from api.filemodel.db import session, RouterAccount
@@ -28,6 +29,13 @@ class RouterCommandLne(object):
 			cipher = AESCipher(getenv('AESCIPHER'))
 			cipher = cipher.decrypt(hashd)
 			return cipher
+		except Exception as e:
+			return False
+
+	def get_index(self,obj,value,field):
+		try:
+			idx = list((idx) for idx, val in enumerate(obj) if val[field] == value)
+			return idx
 		except Exception as e:
 			return False
 
@@ -95,6 +103,30 @@ class RouterCommandLne(object):
 			data['port'] = fr2 if fr2 else {}
 			return data
 
+		except Exception as e:
+			return False
+
+	def collect_interface(self, bridge, resp):
+		try:
+			fr = resp['rtrapi'].get_resource('/ip/address/').get()
+			idx = self.get_index(fr,bridge,'interface')
+			return idx
+		except Exception as e:
+			return False
+
+	def collect_bridge_port(self, bridge, resp):
+		try:
+			fr = resp['rtrapi'].get_resource('/interface/bridge/port/').get()
+			idx = self.get_index(fr,bridge,'bridge')
+			return idx
+		except Exception as e:
+			return False
+
+	def collect_bridge_idx(self,bridge,resp):
+		try:
+			fr = resp['rtrapi'].get_resource('/interface/bridge/').get()
+			idx = self.get_index(fr,bridge,'name')
+			return idx
 		except Exception as e:
 			return False
 
@@ -266,9 +298,38 @@ class RouterCommandLne(object):
 						response['messag'] = 'ok'
 
 					except Exception as e:
-						print(e)
 						response['messag'] = 'something wrong'
 				else:
+					response['messag'] = 'check interface'
+			else:
+				response['messag'] = 'check interface'
+		else:
+			response['messag'] = resp['messag']
+
+		return response
+
+	@clientrouter
+	def delete_bridge_addr(resp, self, *args, **kwargs):
+		response = def_response(topath='delete_bridge_addr')
+		if resp['status'] == True:
+			bridge = self.collect_bridge(args[0], resp)
+			if bridge['bridge'] and bridge['port']:
+				try:
+					# delete address list
+					addr = self.collect_interface(args[0], resp)
+					fr = resp['rtrapi'].get_resource('/ip/address/')
+					fr.remove(numbers=to_string(addr))
+					# delete bridge port 
+					port = self.collect_bridge_port(args[0], resp)
+					fr = resp['rtrapi'].get_resource('/interface/bridge/port/')
+					fr.remove(numbers=to_string(port))
+					# delete bridge
+					bridge_idx = self.collect_bridge_idx(args[0],resp)
+					fr = resp['rtrapi'].get_resource('/interface/bridge/')
+					fr.remove(numbers=to_string(bridge_idx))
+					response['status'] = True
+					response['messag'] = 'ok'
+				except Exception as e:
 					response['messag'] = 'check interface'
 			else:
 				response['messag'] = 'check interface'

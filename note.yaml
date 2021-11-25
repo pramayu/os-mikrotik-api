@@ -25,3 +25,8 @@
 
 # basic setting
 # set ip addr interface<bridge> + NAT
+
+# disable ip neighboard
+
+# dhcp rouge https://www.youtube.com/watch?v=sXGpqObe4FU / with dhcp snooping
+  # bridge -> ip address -> dhcp -> dhcp snooping & trusted

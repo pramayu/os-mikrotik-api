@@ -125,3 +125,25 @@ class UptBridgeNamez(graphene.Mutation):
 			status=response['status'],
 			messag=response['messag'],
 			topath=response['topath'])
+
+class DestBridgeAddr(graphene.Mutation):
+
+	class Arguments:
+		bridgename 	= graphene.String()
+
+	Output 	= CommonRespd
+
+	@secure_action
+	def mutate(response, root, info, **kwargs):
+
+		if response['status'] == True:
+			setup = RouterCommandLne(None)
+			response = setup.delete_bridge_addr(
+				kwargs['bridgename'])
+		else:
+			response['path'] = 'delete_bridge_addr'
+
+		return CommonRespd(
+			status=response['status'],
+			messag=response['messag'],
+			topath=response['topath'])

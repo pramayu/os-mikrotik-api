@@ -27,7 +27,13 @@ from api.controller.service.routercommand.routercmdreqs import AddRouterAdmin
 from api.controller.service.routercommand.routercmdreqs import DtrRouterAdmin
 from api.controller.service.routercommand.routercmdreqs import PortAddressing
 from api.controller.service.routercommand.routercmdreqs import UptBridgeNamez
+from api.controller.service.routercommand.routercmdreqs import DestBridgeAddr
 
+'''
+setup dhcp server
+'''
+from api.controller.service.routercommand.reqdhcpserver import SetupAddrPool
+from api.controller.service.routercommand.reqdhcpserver import SetupDHCPServer
 
 
 class MainService(graphene.ObjectType):
@@ -52,3 +58,7 @@ class MainService(graphene.ObjectType):
 	renamerouterid 		= RenameRouterId.Field()
 	portaddressing 		= PortAddressing.Field()
 	updtbridgename 		= UptBridgeNamez.Field()
+	destbridgeaddr 		= DestBridgeAddr.Field()
+
+	setupaddrpool 		= SetupAddrPool.Field()
+	setupdhcpserver 	= SetupDHCPServer.Field()
